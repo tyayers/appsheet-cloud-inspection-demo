@@ -10,7 +10,7 @@ Here is a high level architecture diagram of the solution.
 
 ## Assets deployed
 
-- Cloud Run containerized service written in Python to host API
+- Cloud Run containerized service written in Python to host the service and API
 - A Firestore data collection used to persist the inspection data
 - Vertex Gen AI Vision models to ask prompts about inspection photos
 
@@ -30,4 +30,4 @@ After deploying, take the URL that's shown in the output window and add it as an
 
 ### Test
 
-You can also test with a demo Cloud Run deployment using this URL as API endpoint in AppSheet (API Key can be anything): https://inspectionsvc-ghfontasua-ew.a.run.app
+You can also test with a demo Cloud Run deployment using this URL as the API endpoint in AppSheet (API Key can be anything): https://inspectionsvc-ghfontasua-ew.a.run.app
