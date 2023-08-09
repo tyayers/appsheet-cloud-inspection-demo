@@ -1,0 +1,151 @@
+openapi: 3.0.3
+info:
+  description: API for managing safety inspections.
+  version: 0.0.1
+  title: Inspection API
+servers:
+  - url: SERVER_URL
+security:
+  - ApiKeyAuth: []
+paths:
+  /inspections:
+    get:
+      summary: List objects.
+      description: Retrieve a page of objects from the server.
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Inspections:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ListOfInspections"
+    post:
+      summary: Creates a new object.
+      description: Creates a new object.
+      requestBody:
+        description: The object to create.
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Inspection"
+      responses:
+        "201":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Inspection"
+  /inspections/{id}:
+    get:
+      summary: Retrieve object.
+      description: Retrieve a single object.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the desired object.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Inspection"
+        "404":
+          description: Object was not found.
+    put:
+      summary: Update object.
+      description: Update a single object.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the desired object.
+          schema:
+            type: string
+      requestBody:
+        description: The object to update.
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Inspection"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Inspection"
+        "404":
+          description: Object was not found.
+    delete:
+      summary: Delete object.
+      description: Delete a single object.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the desired object.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+        "404":
+          description: Object was not found.
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: x-apikey
+      in: header
+  schemas:
+    Inspection:
+      title: Inspection
+      type: object
+      properties:
+        id:
+          description: The id of the object
+          type: string
+          example: hu32hu3
+        dateTime:
+          description: The date-time of the object
+          type: string
+          example: 8/9/2023 9:38:51 AM
+        description:
+          description: The text of the object
+          type: string
+          example: Example description
+        location:
+          description: The location of the object
+          type: string
+          example: Paris, France
+        image:
+          description: An image of the inspection in base64 format
+          type: string
+        extinguishersCount:
+          description: The number of fire extinguishers found in the image
+          type: number
+          example: 2
+        looksSafe:
+          description: An evaluation by the image LLM if the image looks safe or not
+          type: string
+          example: True
+        generatedCaption:
+          description: A generated caption by the LLM of the iamge
+          type: string
+          example: A very safe looking warehouse
+    ListOfInspections:
+      title: List of objects
+      type: array
+      items:
+        $ref: "#/components/schemas/Inspection"
