@@ -61,29 +61,36 @@ class datahandler:
         data = json.loads(web.data())
         imageData = convertImageToBase64(topic, data["image"])
 
-        visionData = json.loads(
-            getImagePrompt(
-                imageData, "how many fire extinguishers are there in the photo?"
+        if imageData != "error":
+            visionData = json.loads(
+                getImagePrompt(
+                    imageData, "how many fire extinguishers are there in the photo?"
+                )
             )
-        )
 
-        if "predictions" in visionData:
-            data["extinguishersCount"] = int(visionData["predictions"][0])
+            if "predictions" in visionData:
+                data["extinguishersCount"] = int(visionData["predictions"][0])
+            else:
+                data["extinguishersCount"] = 0
+
+            visionData = json.loads(
+                getImagePrompt(imageData, "does the area look safe?")
+            )
+
+            if "predictions" in visionData and visionData["predictions"][0] == "no":
+                data["looksSafe"] = "False"
+            else:
+                data["looksSafe"] = "True"
+
+            visionCaptionData = json.loads(getImageCaption(imageData))
+            if "predictions" in visionCaptionData:
+                data["generatedCaption"] = (
+                    visionCaptionData["predictions"][0].capitalize() + "."
+                )
         else:
             data["extinguishersCount"] = 0
-
-        visionData = json.loads(getImagePrompt(imageData, "does the area look safe?"))
-
-        if "predictions" in visionData and visionData["predictions"][0] == "no":
-            data["looksSafe"] = "False"
-        else:
             data["looksSafe"] = "True"
-
-        visionCaptionData = json.loads(getImageCaption(imageData))
-        if "predictions" in visionCaptionData:
-            data["generatedCaption"] = (
-                visionCaptionData["predictions"][0].capitalize() + "."
-            )
+            data["generatedCaption"] = "No caption could be generated of this image."
 
         self.db.collection(topic).document(data["id"]).set(data)
 

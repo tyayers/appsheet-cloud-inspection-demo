@@ -1,4 +1,5 @@
 import base64
+import logging
 import pprint
 import io
 import datetime
@@ -38,7 +39,7 @@ def getImagePrompt(image, prompt1):
     )
     b = datetime.datetime.now()
     c = b - a
-    pprint.pprint(
+    logging.error(
         "{s} ms to q&a prompt with GenAI Vision service.".format(
             s=c.total_seconds() * 1000
         )
@@ -65,7 +66,7 @@ def getImageCaption(image):
     )
     b = datetime.datetime.now()
     c = b - a
-    pprint.pprint(
+    logging.error(
         "{s} ms to caption with GenAI Vision service.".format(
             s=c.total_seconds() * 1000
         )
@@ -77,13 +78,15 @@ def getImageCaption(image):
 def convertImageToBase64(topic, image):
     imageResult = ""
 
-    if image.startswith(topic + "_Images/"):
+    if "_Images/" in image:
+        logging.error("Retrieving Google Drive image: " + image)
+
         a = datetime.datetime.now()
         imageResult = getImageFromDrive(image.split("/")[-1])
         b = datetime.datetime.now()
         c = b - a
 
-        pprint.pprint(
+        logging.error(
             "{s} ms to get image from google drive.".format(s=c.total_seconds() * 1000)
         )
     elif image.startswith("data:image/png;base64,"):
@@ -114,22 +117,27 @@ def getImageFromDrive(name):
         .execute()
     )
 
-    for file in response.get("files", []):
-        # Process change
-        print("Found file: " + file.get("name") + " and id: " + file.get("id"))
-        request = service.files().get_media(fileId=file.get("id"))
-        # fh = io.BytesIO()
-        fh = io.FileIO("image.png", "wb")
-        downloader = MediaIoBaseDownload(fh, request)
-        done = False
-        while done is False:
-            status, done = downloader.next_chunk()
-            print("Download " + str(int(status.progress() * 100)))
+    files = response.get("files", [])
 
-        # output["formThumbnail"] = file["thumbnailLink"]
-        break
+    if len(files) > 0:
+        for file in response.get("files", []):
+            # Process change
+            print("Found file: " + file.get("name") + " and id: " + file.get("id"))
+            request = service.files().get_media(fileId=file.get("id"))
+            # fh = io.BytesIO()
+            fh = io.FileIO("image.png", "wb")
+            downloader = MediaIoBaseDownload(fh, request)
+            done = False
+            while done is False:
+                status, done = downloader.next_chunk()
+                print("Download " + str(int(status.progress() * 100)))
 
-    with open("image.png", "rb") as imageFile:
-        encoded_string = base64.b64encode(imageFile.read()).decode("utf-8")
+            # output["formThumbnail"] = file["thumbnailLink"]
+            break
+
+        with open("image.png", "rb") as imageFile:
+            encoded_string = base64.b64encode(imageFile.read()).decode("utf-8")
+    else:
+        encoded_string = "error"
 
     return encoded_string
