@@ -46,9 +46,6 @@ do
         sleep 10s
     else
         COUNTER=11
-        echo "Finished with data import."
-        echo $?
+        echo 0
     fi
 done
-
-echo $?
