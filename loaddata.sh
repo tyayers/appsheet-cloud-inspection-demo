@@ -37,8 +37,6 @@ do
         }
     }")
 
-    echo $RESULT
-
     if [[ "$RESULT" == *error* ]]
     then
         COUNTER=$(( $COUNTER + 1 ))
@@ -49,3 +47,5 @@ do
     fi
 
 done
+
+return 0
