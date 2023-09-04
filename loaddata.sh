@@ -1,6 +1,8 @@
 TOKEN=$(gcloud auth print-access-token)
 #export GOOGLE_CLOUD_PROJECT=$(gcloud config get project)
 
+set +e
+
 COUNTER=0
 
 while [ $COUNTER -le 10 ]
