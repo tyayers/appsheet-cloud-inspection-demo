@@ -45,6 +45,7 @@ do
     else
         COUNTER=11
         echo "Finished with data import."
+        echo $?
     fi
 done
 
