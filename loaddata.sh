@@ -1,7 +1,7 @@
-export TOKEN=$(gcloud auth print-access-token)
+TOKEN=$(gcloud auth print-access-token)
 #export GOOGLE_CLOUD_PROJECT=$(gcloud config get project)
 
-export COUNTER=0
+COUNTER=0
 
 while [ $COUNTER -le 10 ]
 do
@@ -44,6 +44,8 @@ do
         sleep 10s
     else
         COUNTER=11
+        echo "Finished with data import."
     fi
-
 done
+
+echo $?
