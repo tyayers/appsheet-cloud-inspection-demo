@@ -20,8 +20,8 @@
         "echo 'Now creating service account with correct permissions..'",
         "PROJECTNUMBER=$(gcloud projects list --filter=\"$(gcloud config get-value project)\" --format=\"value(PROJECT_NUMBER)\") && gcloud projects add-iam-policy-binding $GOOGLE_CLOUD_PROJECT --member=\"serviceAccount:$PROJECTNUMBER-compute@developer.gserviceaccount.com\" --role='roles/datastore.user'",
         "PROJECTNUMBER=$(gcloud projects list --filter=\"$(gcloud config get-value project)\" --format=\"value(PROJECT_NUMBER)\") && gcloud projects add-iam-policy-binding $GOOGLE_CLOUD_PROJECT --member=\"serviceAccount:$PROJECTNUMBER-compute@developer.gserviceaccount.com\" --role='roles/aiplatform.user'",
-        "./loaddata.sh || 0",
         "echo hi",
+        "./loaddata.sh || 0",
         "PROJECTNUMBER=$(gcloud projects list --filter=\"$(gcloud config get-value project)\" --format=\"value(PROJECT_NUMBER)\") && echo 'Add user \"$PROJECTNUMBER-compute@developer.gserviceaccount.com\" to your AppSheet Google Drive folder with Read permissions.'"
       ]
     }
