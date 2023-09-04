@@ -40,7 +40,7 @@ do
     if [[ "$RESULT" == *error* ]]
     then
         COUNTER=$(( $COUNTER + 1 ))
-        echo "Error detected, waiting 10s and then retry $COUNTER of 10 tries..."
+        echo "Error detected, waiting 10s and then retry $COUNTER of 11 tries..."
         sleep 10s
     else
         COUNTER=11
