@@ -7,7 +7,7 @@ COUNTER=0
 
 while [ $COUNTER -le 10 ]
 do
-    RESULT=$(curl --location --request POST "https://firestore.googleapis.com/v1/projects/$GOOGLE_CLOUD_PROJECT/databases/(default)/documents/inspections?documentId=b78dfdb" \
+    RESULT=$(curl --location --request POST "https://firestore.googleapis.com/v1/projects/$GOOGLE_CLOUD_PROJECT/databases/(default)/documents/images?documentId=b78dfdb" \
     --header "Authorization: Bearer $TOKEN" \
     --header "Content-Type: application/json" \
     --data-raw "{
