@@ -16,7 +16,7 @@ import google.auth
 
 from app_utils import convertImageToBase64, getImagePrompt, getImageCaption
 
-topic = "inspections"
+topic = "images"
 
 urls = ("/{topic}(.*)".format(topic=topic), "datahandler", "/", "openapispec")
 app = web.application(urls, globals())
@@ -62,16 +62,6 @@ class datahandler:
         imageData = convertImageToBase64(topic, data["image"])
 
         if imageData != "error":
-            visionData = json.loads(
-                getImagePrompt(
-                    imageData, "how many fire extinguishers are there in the photo?"
-                )
-            )
-
-            if "predictions" in visionData:
-                data["extinguishersCount"] = int(visionData["predictions"][0])
-            else:
-                data["extinguishersCount"] = 0
 
             visionData = json.loads(
                 getImagePrompt(imageData, "does the area look safe?")
@@ -88,7 +78,6 @@ class datahandler:
                     visionCaptionData["predictions"][0].capitalize() + "."
                 )
         else:
-            data["extinguishersCount"] = 0
             data["looksSafe"] = "True"
             data["generatedCaption"] = "No caption could be generated of this image."
 

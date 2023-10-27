@@ -1,14 +1,14 @@
 openapi: 3.0.3
 info:
-  description: API for managing safety inspections.
+  description: API for managing safety equipment.
   version: 0.0.1
-  title: Inspection API
+  title: Safety API
 servers:
   - url: SERVER_URL
 security:
   - ApiKeyAuth: []
 paths:
-  /inspections:
+  /images:
     get:
       summary: List objects.
       description: Retrieve a page of objects from the server.
@@ -20,10 +20,10 @@ paths:
               schema:
                 type: object
                 properties:
-                  Inspections:
+                  Images:
                     type: array
                     items:
-                      $ref: "#/components/schemas/ListOfInspections"
+                      $ref: "#/components/schemas/ListOfImages"
     post:
       summary: Creates a new object.
       description: Creates a new object.
@@ -33,15 +33,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Inspection"
+              $ref: "#/components/schemas/Image"
       responses:
         "201":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Inspection"
-  /inspections/{id}:
+                $ref: "#/components/schemas/Image"
+  /images/{id}:
     get:
       summary: Retrieve object.
       description: Retrieve a single object.
@@ -58,7 +58,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Inspection"
+                $ref: "#/components/schemas/Image"
         "404":
           description: Object was not found.
     put:
@@ -77,14 +77,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Inspection"
+              $ref: "#/components/schemas/Image"
       responses:
         "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Inspection"
+                $ref: "#/components/schemas/Image"
         "404":
           description: Object was not found.
     delete:
@@ -109,8 +109,8 @@ components:
       name: x-apikey
       in: header
   schemas:
-    Inspection:
-      title: Inspection
+    Image:
+      title: Image
       type: object
       properties:
         id:
@@ -130,12 +130,8 @@ components:
           type: string
           example: Paris, France
         image:
-          description: An image of the inspection in base64 format
+          description: An image in base64 format
           type: string
-        extinguishersCount:
-          description: The number of fire extinguishers found in the image
-          type: number
-          example: 2
         looksSafe:
           description: An evaluation by the image LLM if the image looks safe or not
           type: string
@@ -144,8 +140,8 @@ components:
           description: A generated caption by the LLM of the iamge
           type: string
           example: A very safe looking warehouse
-    ListOfInspections:
+    ListOfImages:
       title: List of objects
       type: array
       items:
-        $ref: "#/components/schemas/Inspection"
+        $ref: "#/components/schemas/Image"
