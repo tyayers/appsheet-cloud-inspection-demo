@@ -1,5 +1,5 @@
 {
-  "name": "inspection-service",
+  "name": "safety-vision-service",
   "env": {
     "API_KEY": {
       "generator": "secret",
