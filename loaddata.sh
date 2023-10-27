@@ -21,9 +21,6 @@ do
             'dateTime': {
                 'stringValue': '8/9/2023 9:38:51 AM'
             },
-            'extinguishersCount': {
-                'integerValue': '2'
-            },
             'generatedCaption': {
                 'stringValue': 'Two fire extinguishers are hanging on a pillar in a warehouse.'
             },
