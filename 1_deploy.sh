@@ -1,6 +1,6 @@
 export PROJECT=$(gcloud config get-value project)
 export LOCATION=europe-west1
-export NAME=inspectionsvc
+export NAME=safety-vision-service
 
 gcloud services enable appengine.googleapis.com
 gcloud services enable firestore.googleapis.com
