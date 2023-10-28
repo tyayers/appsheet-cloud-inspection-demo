@@ -59,7 +59,10 @@ class datahandler:
     # Posts a new object to be stored
     def POST(self, name):
         data = json.loads(web.data())
-        imageData = convertImageToBase64(topic, data["image"])
+        try:
+            imageData = convertImageToBase64(topic, data["image"])
+        except:
+            logging.error("Exception in loading image, image not loaded.")
 
         if imageData != "error":
 
