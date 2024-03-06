@@ -70,6 +70,7 @@ Now that we've deployed the service, you can do a test call to see if our test d
 Run this curl command to call our service and return the test inspection image data (including sample image data).
 
 ```sh
+SERVICE_URL=$(gcloud run services describe $NAME --platform managed --region $REGION --format 'value(status.url)')
 curl "$SERVICE_URL/images"
 ```
 When the command has been inserted into your shell, press Enter to run the command.
