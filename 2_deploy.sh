@@ -39,4 +39,5 @@ gcloud run deploy $NAME --image $REGION-docker.pkg.dev/$PROJECT_ID/docker-regist
     --region $REGION --allow-unauthenticated \
     --set-env-vars GCLOUD_PROJECT="$PROJECT_ID"
 
-export SERVICE_URL=$(gcloud run services describe $NAME --platform managed --region $REGION --format 'value(status.url)')
+SERVICE_URL=$(gcloud run services describe $NAME --platform managed --region $REGION --format 'value(status.url)')
+touch -- "$SERVICE_URL"
