@@ -18,7 +18,7 @@ Here is a high level architecture diagram of the solution.
 
 To deploy, simply click on this button to deploy into a chosen GCP project:
 
-[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run)
+[![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.png)](https://ssh.cloud.google.com/cloudshell/open?cloudshell_git_repo=https://github.com/tyayers/appsheet-cloud-inspection-demo&cloudshell_git_branch=main&cloudshell_workspace=.&cloudshell_tutorial=docs/tutorial.md)
 
 Or you can also deploy manually by cloning this repo and running this script:
 
