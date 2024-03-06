@@ -23,10 +23,12 @@ To deploy, simply click on this button to start a Google Cloud Shell tutorial to
 Or you can also deploy manually by cloning this repo and running this script:
 
 ```bash
-# First set environment variables (specifically your project and region for deployment)
+# First open the file 1_env.sh and change the variables to your project and region.
+
+# Then set environment variables in your shell
 source 1_env.sh
 
-# Now configure your GCP project, service account, and deployment
+# Now configure your GCP project, service account, and run the deployment
 ./2_deploy.sh
 
 # Insert a test data record into the Firestore DB so that AppSheet can detect the schema
