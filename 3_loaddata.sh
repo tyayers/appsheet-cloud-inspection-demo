@@ -1,13 +1,11 @@
 TOKEN=$(gcloud auth print-access-token)
-#export GOOGLE_CLOUD_PROJECT=$(gcloud config get project)
-
 set +e
 
 COUNTER=0
 
 while [ $COUNTER -le 10 ]
 do
-    RESULT=$(curl --location --request POST "https://firestore.googleapis.com/v1/projects/$GOOGLE_CLOUD_PROJECT/databases/(default)/documents/images?documentId=b78dfdb" \
+    RESULT=$(curl --location --request POST "https://firestore.googleapis.com/v1/projects/$PROJECT_ID/databases/(default)/documents/images?documentId=b78dfdb" \
     --header "Authorization: Bearer $TOKEN" \
     --header "Content-Type: application/json" \
     --data-raw "{
