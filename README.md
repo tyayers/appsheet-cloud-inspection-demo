@@ -20,7 +20,7 @@ To deploy, simply click on this button to start a Google Cloud Shell tutorial to
 
 [![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.png)](https://ssh.cloud.google.com/cloudshell/open?cloudshell_git_repo=https://github.com/tyayers/appsheet-cloud-inspection-demo&cloudshell_git_branch=main&cloudshell_workspace=.&cloudshell_tutorial=docs/tutorial.md)
 
-Or you can also deploy manually by cloning this repo and running this script:
+Or you can also deploy manually by cloning this repo and running these commands:
 
 ```bash
 # First open the file 1_env.sh and change the variables to your project and region.
