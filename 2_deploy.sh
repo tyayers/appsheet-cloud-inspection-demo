@@ -21,10 +21,10 @@ gcloud artifacts repositories create docker-registry --repository-format=docker 
 if [[ $(gcloud app describe 2>&1 || true) == *'ERROR'* ]]; then echo 'No app engine or firestore instances found, creating...' && gcloud app create --region=europe-west; fi
 gcloud alpha firestore databases update --type=firestore-native
 PROJECTNUMBER=$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)")
-gcloud projects add-iam-policy-binding $PROJECT_ID --member="serviceAccount:$PROJECT_IDNUMBER-compute@developer.gserviceaccount.com" --role='roles/datastore.user'
-gcloud projects add-iam-policy-binding $PROJECT_ID --member="serviceAccount:$PROJECT_IDNUMBER-compute@developer.gserviceaccount.com" --role='roles/aiplatform.user'
-gcloud projects add-iam-policy-binding $PROJECT_ID --member="serviceAccount:$PROJECT_IDNUMBER-compute@developer.gserviceaccount.com" --role='roles/documentai.apiUser'
-echo "Add user $PROJECT_IDNUMBER-compute@developer.gserviceaccount.com to your AppSheet Google Drive folder with Read permissions."
+gcloud projects add-iam-policy-binding $PROJECT_ID --member="serviceAccount:$PROJECTNUMBER-compute@developer.gserviceaccount.com" --role='roles/datastore.user'
+gcloud projects add-iam-policy-binding $PROJECT_ID --member="serviceAccount:$PROJECTNUMBER-compute@developer.gserviceaccount.com" --role='roles/aiplatform.user'
+gcloud projects add-iam-policy-binding $PROJECT_ID --member="serviceAccount:$PROJECTNUMBER-compute@developer.gserviceaccount.com" --role='roles/documentai.apiUser'
+echo "Add user $PROJECTNUMBER-compute@developer.gserviceaccount.com to your AppSheet Google Drive folder with Read permissions."
 
 # Submit build
 echo "Building service"
