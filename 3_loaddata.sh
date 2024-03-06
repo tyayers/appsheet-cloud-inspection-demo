@@ -34,7 +34,7 @@ do
         }
     }")
 
-    if [[ "$RESULT" == *error* ]]
+    if [[ $RESULT == *error* && $RESULT != *409* ]];
     then
         COUNTER=$(( $COUNTER + 1 ))
         echo "Error detected, waiting 10s and then retry $COUNTER of 11 tries..."
