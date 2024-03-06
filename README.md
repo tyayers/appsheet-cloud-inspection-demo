@@ -35,6 +35,7 @@ source 1_env.sh
 ./3_loaddata.sh
 
 # Test the service by calling this curl command to get test data
+SERVICE_URL=$(gcloud run services describe $NAME --platform managed --region $REGION --format 'value(status.url)')
 curl "$SERVICE_URL/images"
 ```
 
