@@ -31,6 +31,9 @@ source 1_env.sh
 
 # Insert a test data record into the Firestore DB so that AppSheet can detect the schema
 ./3_loaddata.sh
+
+# Test the service by calling this curl command to get test data
+curl "$SERVICE_URL/images"
 ```
 
 In case you get any errors running the above commands, or if the service doesn't appear to be deployed correctly, create an issue in this repo with the command outputs.
