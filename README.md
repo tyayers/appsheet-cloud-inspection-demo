@@ -16,14 +16,23 @@ Here is a high level architecture diagram of the solution.
 
 ## Deploy
 
-To deploy, simply click on this button to deploy into a chosen GCP project:
+To deploy, simply click on this button to start a Google Cloud Shell tutorial to guide you through the deployment steps.
 
 [![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.png)](https://ssh.cloud.google.com/cloudshell/open?cloudshell_git_repo=https://github.com/tyayers/appsheet-cloud-inspection-demo&cloudshell_git_branch=main&cloudshell_workspace=.&cloudshell_tutorial=docs/tutorial.md)
 
 Or you can also deploy manually by cloning this repo and running this script:
 
 ```bash
-./1_deploy.sh
+# First set environment variables (specifically your project and region for deployment)
+source 1_env.sh
+
+# Now configure your GCP project, service account, and deployment
+./2_deploy.sh
+
+# Insert a test data record into the Firestore DB so that AppSheet can detect the schema
+./3_loaddata.sh
 ```
+
+In case you get any errors running the above commands, or if the service doesn't appear to be deployed correctly, create an issue in this repo with the command outputs.
 
 See complete guide to deploying and using the solution in this [community article](https://www.googlecloudcommunity.com/gc/Tips-Tricks/Use-Google-Cloud-Generative-AI-Image-Models-in-AppSheet-as-seen/td-p/629835) on the Google Cloud Community AppSheet site.

@@ -1,3 +1,8 @@
+echo "Setting project to $PROJECT"
+
+gcloud config set project $PROJECT
+
+echo "Enabling services"
 gcloud services enable appengine.googleapis.com
 gcloud services enable firestore.googleapis.com
 gcloud services enable artifactregistry.googleapis.com
@@ -8,6 +13,7 @@ gcloud services enable documentai.googleapis.com
 gcloud services enable drive.googleapis.com
 
 # Create artifact registry, if needed
+echo "Creating docker registry, Firestore DB, and updating user rights..."
 gcloud artifacts repositories create docker-registry --repository-format=docker \
 --location="$REGION" --description="Docker registry" 2>/dev/null
 
@@ -21,12 +27,16 @@ gcloud projects add-iam-policy-binding $PROJECT --member="serviceAccount:$PROJEC
 echo "Add user $PROJECTNUMBER-compute@developer.gserviceaccount.com to your AppSheet Google Drive folder with Read permissions."
 
 # Submit build
+echo "Building service"
 gcloud builds submit --config=cloudbuild.yaml \
   --substitutions=_LOCATION="$REGION",_REPOSITORY="docker-registry",_IMAGE="$NAME" .
 
 # Deploy
+echo "Deploying service"
 gcloud run deploy $NAME --image $REGION-docker.pkg.dev/$PROJECT/docker-registry/$NAME \
     --platform managed --project $PROJECT \
     --min-instances=1 \
     --region $REGION --allow-unauthenticated \
     --set-env-vars GCLOUD_PROJECT="$PROJECT"
+
+export SERVICE_URL=$(gcloud run services describe $NAME --platform managed --region $REGION --format 'value(status.url)')
