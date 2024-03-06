@@ -20,13 +20,14 @@ To begin, edit the provided sample `1_env.sh` file, and set the environment vari
 
 Click <walkthrough-editor-open-file filePath="1_env.sh">here</walkthrough-editor-open-file> to open the file in the editor
 
-Then, source the `1_env.sh` file in the Cloud shell.
+Then, source the `1_env.sh` file in the shell.
 
 ```sh
 source ./1_env.sh
 ```
 
 The command has been inserted into your shell, press Enter to run the command.
+
 ---
 
 ## Setup GCP Project and Deploy Service
