@@ -4,4 +4,3 @@ google-auth
 google-auth-httplib2
 google-auth-oauthlib
 firebase-admin
-google-cloud-aiplatform

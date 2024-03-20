@@ -16,12 +16,9 @@ import google.auth
 
 from app_utils import convertImageToBase64, getImagePrompt, getImageCaption
 
-topic = "car-parts"
-topicDocs = "car-part-docs"
+topic = "images"
 
-urls = ("/{topic}(.*)".format(topic=topic), "datahandler", 
-        "/", "openapispec",
-        "/{topicDocs}(.*)".format(topicDocs=topicDocs), "docshandler")
+urls = ("/{topic}(.*)".format(topic=topic), "datahandler", "/", "openapispec")
 app = web.application(urls, globals())
 
 if not firebase_admin._apps:
@@ -63,23 +60,29 @@ class datahandler:
     def POST(self, name):
         data = json.loads(web.data())
         try:
-          imageData = convertImageToBase64(topic, data["image"])
+            imageData = convertImageToBase64(topic, data["image"])
         except:
-          logging.error("Exception in loading image, image not loaded.")
+            logging.error("Exception in loading image, image not loaded.")
 
         if imageData != "error":
 
-            visionData = getImagePrompt(imageData, """please describe this car part in 2-3 technical words and not in a sentence.""")
+            visionData = json.loads(
+                getImagePrompt(imageData, "does the area look safe?")
+            )
 
-            data["partName"] = visionData.replace(".", "").strip()
+            if "predictions" in visionData and visionData["predictions"][0] == "no":
+                data["looksSafe"] = "False"
+            else:
+                data["looksSafe"] = "True"
 
-            # visionCaptionData = json.loads(getImageCaption(imageData))
-            # if "predictions" in visionCaptionData:
-            #   data["generatedCaption"] = (
-            #     visionCaptionData["predictions"][0].capitalize() + "."
-            #   )
+            visionCaptionData = json.loads(getImageCaption(imageData))
+            if "predictions" in visionCaptionData:
+                data["generatedCaption"] = (
+                    visionCaptionData["predictions"][0].capitalize() + "."
+                )
         else:
-          data["partName"] = "Not recognized."
+            data["looksSafe"] = "True"
+            data["generatedCaption"] = "No caption could be generated of this image."
 
         self.db.collection(topic).document(data["id"]).set(data)
 
@@ -105,32 +108,6 @@ class datahandler:
             self.db.collection(topic).document(id[1:]).delete()
 
         return "200 OK"
-
-
-class docshandler:
-    db = firestore.client()
-
-    # Returns all of the notes
-    def GET(self, id):
-        new_result = {}
-
-        if len(id) == 0:
-            forms_ref = self.db.collection(topicDocs)
-            forms = forms_ref.stream()
-            new_result = {topicDocs: []}
-
-            for form in forms:
-                new_result[topicDocs].append(form.to_dict())
-        else:
-            doc_ref = self.db.collection(topicDocs).document(id[1:])
-            doc = doc_ref.get()
-            new_result = doc.to_dict()
-
-        if new_result:
-            web.header("Content-Type", "application/json")
-            return json.dumps(new_result)
-        else:
-            return web.notfound("Not found")
 
 
 # Returns the OpenAPI spec, filled in with the current server

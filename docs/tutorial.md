@@ -1,4 +1,4 @@
-# AppSheet Cloud Inspection Demo with Vertex AI
+# AppSheet Clout Inspection Demo with Vertex AI
 
 ---
 
