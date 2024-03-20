@@ -1,14 +1,14 @@
 openapi: 3.0.3
 info:
-  description: API for managing safety equipment.
+  description: API for retrieving car parts data.
   version: 0.0.1
-  title: Safety API
+  title: Car Parts API
 servers:
   - url: SERVER_URL
 security:
   - ApiKeyAuth: []
 paths:
-  /images:
+  /car-parts:
     get:
       summary: List objects.
       description: Retrieve a page of objects from the server.
@@ -20,10 +20,10 @@ paths:
               schema:
                 type: object
                 properties:
-                  Images:
+                  Parts:
                     type: array
                     items:
-                      $ref: "#/components/schemas/ListOfImages"
+                      $ref: "#/components/schemas/ListOfParts"
     post:
       summary: Creates a new object.
       description: Creates a new object.
@@ -33,15 +33,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Image"
+              $ref: "#/components/schemas/Part"
       responses:
         "201":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Image"
-  /images/{id}:
+                $ref: "#/components/schemas/Part"
+  /car-parts/{id}:
     get:
       summary: Retrieve object.
       description: Retrieve a single object.
@@ -58,7 +58,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Image"
+                $ref: "#/components/schemas/Part"
         "404":
           description: Object was not found.
     put:
@@ -77,14 +77,108 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Image"
+              $ref: "#/components/schemas/Part"
       responses:
         "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Image"
+                $ref: "#/components/schemas/Part"
+        "404":
+          description: Object was not found.
+    delete:
+      summary: Delete object.
+      description: Delete a single object.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the desired object.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+        "404":
+          description: Object was not found.
+  /car-part-docs:
+    get:
+      summary: List objects.
+      description: Retrieve a page of objects from the server.
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  PartDocs:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ListOfPartDocs"
+    post:
+      summary: Creates a new object.
+      description: Creates a new object.
+      requestBody:
+        description: The object to create.
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartDoc"
+      responses:
+        "201":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartDoc"
+  /car-part-docs/{id}:
+    get:
+      summary: Retrieve object.
+      description: Retrieve a single object.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the desired object.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartDoc"
+        "404":
+          description: Object was not found.
+    put:
+      summary: Update object.
+      description: Update a single object.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the desired object.
+          schema:
+            type: string
+      requestBody:
+        description: The object to update.
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartDoc"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartDoc"
         "404":
           description: Object was not found.
     delete:
@@ -109,8 +203,8 @@ components:
       name: x-apikey
       in: header
   schemas:
-    Image:
-      title: Image
+    Part:
+      title: Part
       type: object
       properties:
         id:
@@ -132,16 +226,30 @@ components:
         image:
           description: An image in base64 format
           type: string
-        looksSafe:
-          description: An evaluation by the image LLM if the image looks safe or not
+        partName:
+          description: The name of the car part in the image
           type: string
-          example: True
         generatedCaption:
           description: A generated caption by the LLM of the iamge
           type: string
           example: A very safe looking warehouse
-    ListOfImages:
+    PartDoc:
+      title: PartDoc
+      type: object
+      properties:
+        name:
+          description: name of the car part
+          type: string
+        description:
+          description: description of the car part
+          type: string
+    ListOfParts:
       title: List of objects
       type: array
       items:
-        $ref: "#/components/schemas/Image"
+        $ref: "#/components/schemas/Part"
+    ListOfPartDocs:
+      title: List of objects
+      type: array
+      items:
+        $ref: "#/components/schemas/PartDoc"

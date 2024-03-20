@@ -6,16 +6,19 @@ import datetime
 
 import google.auth
 
-# import google.auth.transport.requests
 from google.auth.transport.requests import AuthorizedSession
 from googleapiclient.http import MediaIoBaseDownload
 from googleapiclient.discovery import build
 
+import vertexai
+from vertexai.preview.generative_models import GenerativeModel, Part
+import vertexai.preview.generative_models as generative_models
+
 creds, project = google.auth.default(
-    scopes=[
-        "https://www.googleapis.com/auth/cloud-platform",
-        "https://www.googleapis.com/auth/drive.readonly",
-    ]
+  scopes=[
+    "https://www.googleapis.com/auth/cloud-platform",
+    "https://www.googleapis.com/auth/drive.readonly",
+  ]
 )
 
 
@@ -23,20 +26,47 @@ def getImagePrompt(image, prompt1):
     authed_session = AuthorizedSession(creds)
 
     a = datetime.datetime.now()
-    response = authed_session.post(
-        url="https://us-central1-aiplatform.googleapis.com/v1/projects/{project}/locations/us-central1/publishers/google/models/imagetext:predict".format(
-            project=project
-        ),
-        json={
-            "instances": [
-                {
-                    "prompt": prompt1,
-                    "image": {"bytesBase64Encoded": image},
-                }
-            ],
-            "parameters": {"sampleCount": 1},
-        },
+
+    vertexai.init(project=project, location="us-central1")
+    model = GenerativeModel("gemini-1.0-pro-vision-001")
+
+    image1 = Part.from_data(data=base64.b64decode(image), mime_type="image/png")
+
+    responses = model.generate_content(
+      [image1, prompt1],
+      generation_config={
+          "max_output_tokens": 2048,
+          "temperature": 0.4,
+          "top_p": 1,
+          "top_k": 32
+      },
+      safety_settings={
+            generative_models.HarmCategory.HARM_CATEGORY_HATE_SPEECH: generative_models.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+            generative_models.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: generative_models.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+            generative_models.HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: generative_models.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+            generative_models.HarmCategory.HARM_CATEGORY_HARASSMENT: generative_models.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+      },
+      stream=True,
     )
+    
+    result = ""
+    for response in responses:
+      result = result + response.text
+
+    # response = authed_session.post(
+    #   url="https://us-central1-aiplatform.googleapis.com/v1/projects/{project}/locations/us-central1/publishers/google/models/imagetext:predict".format(
+    #     project=project
+    #   ),
+    #   json={
+    #     "instances": [
+    #         {
+    #             "prompt": prompt1,
+    #             "image": {"bytesBase64Encoded": image},
+    #         }
+    #     ],
+    #     "parameters": {"sampleCount": 1},
+    #   },
+    # )
     b = datetime.datetime.now()
     c = b - a
     logging.error(
@@ -44,7 +74,7 @@ def getImagePrompt(image, prompt1):
             s=c.total_seconds() * 1000
         )
     )
-    return response.content
+    return result
 
 
 def getImageCaption(image):
@@ -98,6 +128,8 @@ def convertImageToBase64(topic, image):
     elif image.startswith("data:image/jpg;base64,"):
         imageResult = image.replace("data:image/jpg;base64,", "")
         imageResult = imageResult.split("#filename=", 1)[0]
+    else:
+        imageResult = image
 
     return imageResult
 
